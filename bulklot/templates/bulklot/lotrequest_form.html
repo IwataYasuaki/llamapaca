@@ -12,8 +12,7 @@
 <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    {% bootstrap_formset lotreqtime_formset %}
-    <hr>
+    {{ lotreqtime_formset.management_form }}
     {% for lotreqtime in lotreqtime_formset %}
         <div class="row">
 	    {% bootstrap_form lotreqtime form_group_class='form-group col-6' %}
