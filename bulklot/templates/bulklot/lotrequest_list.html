@@ -1,0 +1,17 @@
+{% extends 'bulklot/base.html' %}
+
+{% block title %}申込履歴{% endblock %}
+
+{% block contents %}
+
+<h2>申込履歴</h2>
+
+<p><a href="{% url 'bulklot:lot_req_create' %}">新規申込</a></p>
+
+<ul>
+    {% for req in lotrequest_list %}
+    <li><a href="{% url 'bulklot:lot_req_detail' req.id %}">{{ req.req_date }} / {{ req.location }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

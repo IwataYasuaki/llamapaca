@@ -1,0 +1,21 @@
+{% extends 'bulklot/base.html' %}
+
+{% block title %}申込詳細{% endblock %}
+
+{% block contents %}
+
+<h2>申込詳細</h2>
+
+<p>申込日：{{ lotrequest.req_date }}</p>
+<p>場所：{{ lotrequest.location }}</p>
+<p>希望日時：</p>
+<ul>
+    {% for lotreqtime in lotreqtime_list %}
+    <li>{{ lotreqtime.date }} {{ lotreqtime.time }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>
+
+{% endblock %}
+

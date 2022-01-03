@@ -31,13 +31,14 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'bulklot.apps.BulklotConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bulklot.apps.BulklotConfig',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Settings for django-bootstrap4
+BOOTSTRAP4 = {
+    "error_css_class": "bootstrap4-error",
+    "required_css_class": "bootstrap4-required",
+    "javascript_in_head": True,
+    "include_jquery": True,
+}

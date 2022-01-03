@@ -1,0 +1,32 @@
+{% extends 'bulklot/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}申込フォーム{% endblock %}
+
+{% block contents %}
+
+<h2>申込フォーム</h2>
+
+{% bootstrap_form_errors form %}
+{% bootstrap_formset_errors lotreqtime_formset %}
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% bootstrap_formset lotreqtime_formset %}
+    <hr>
+    {% for lotreqtime in lotreqtime_formset %}
+        <div class="row">
+	    {% bootstrap_form lotreqtime form_group_class='form-group col-6' %}
+	</div>
+    {% endfor %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+    {% endbuttons %}
+</form>
+
+<a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>
+
+{% endblock %}
+
