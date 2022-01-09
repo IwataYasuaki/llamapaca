@@ -1,2 +1,2 @@
 web: gunicorn config.wsgi:application
-worker: python llamapaca/manage.py rqworker
+worker: python manage.py rqworker
