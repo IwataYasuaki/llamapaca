@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,11 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fnu+x2opz#0zyj+ms76y*+__k-zcy$9rs0+clznvg*t3v*lhmr'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'bulklot.apps.BulklotConfig',
     'bootstrap4',
     'django_rq',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 MIDDLEWARE = [
@@ -78,14 +78,17 @@ WSGI_APPLICATION = 'llamapaca.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'name',
+        'USER': 'user',
+        'PASSWORD': '',
+        'HOST': 'host',
+        'PORT': '',
     }
 }
 
-# Heroku用設定
-import dj_database_url
-db_from_env = dj_database_url.config()
+# Settings for Heroku
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
 DATABASES['default'].update(db_from_env)
 
 
@@ -155,15 +158,13 @@ RQ_QUEUES = {
 }
 RQ_API_TOKEN = 'rq'
 
-
-DEBUG = False
-
 try:
-    from config.local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
 
 if not DEBUG:
     import django_heroku
     django_heroku.settings(locals())
+    SECRET_KEY = os.environ['SECRET_KEY']
 
