@@ -7,6 +7,8 @@
 
 <h2>申込フォーム</h2>
 
+{{ tmgbc }}
+
 {% bootstrap_form_errors form %}
 {% bootstrap_formset_errors lotreqtime_formset %}
 <form method="post">
@@ -26,6 +28,8 @@
 </form>
 
 <a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>
+
+<br><br>
 
 {% endblock %}
 

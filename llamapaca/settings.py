@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bulklot.apps.BulklotConfig',
     'bootstrap4',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,15 @@ BOOTSTRAP4 = {
     "javascript_in_head": True,
     "include_jquery": True,
 }
+
+# Settings for django-rq
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': '',
+        'DEFAULT_TIMEOUT': 360,
+    },
+}
+RQ_API_TOKEN = 'rq'

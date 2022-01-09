@@ -6,12 +6,13 @@
 
 <h2>申込詳細</h2>
 
-<p>申込日：{{ lotrequest.req_date }}</p>
-<p>場所：{{ lotrequest.location }}</p>
+<p>申込日：{{ lotrequest.req_date | date:"Y/m/d(D) h:i:s" }}</p>
+<p>種目：{{ lotrequest.get_sport_display }}</p>
+<p>場所：{{ lotrequest.get_location_display }}</p>
 <p>希望日時：</p>
 <ul>
     {% for lotreqtime in lotreqtime_list %}
-    <li>{{ lotreqtime.date }} {{ lotreqtime.time }}</li>
+    <li>{{ lotreqtime.date | date:"Y/m/d(D)" }} {{ lotreqtime.get_time_display }}</li>
     {% endfor %}
 </ul>
 

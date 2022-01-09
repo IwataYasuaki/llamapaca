@@ -5,13 +5,34 @@
 {% block contents %}
 
 <h2>申込履歴</h2>
+<a href="{% url 'bulklot:lot_req_create' %}">
+<button type="button" class="btn btn-primary">
+新規申込
+</button>
+</a>
 
-<p><a href="{% url 'bulklot:lot_req_create' %}">新規申込</a></p>
+<br><br>
 
-<ul>
-    {% for req in lotrequest_list %}
-    <li><a href="{% url 'bulklot:lot_req_detail' req.id %}">{{ req.req_date }} / {{ req.location }}</a></li>
-    {% endfor %}
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">申込日時</th>
+            <th scope="col">種目</th>
+            <th scope="col">場所</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in lotrequest_list %}
+        <tr>
+            <td>
+                <a href="{% url 'bulklot:lot_req_detail' req.id %}">
+                {{ req.req_date | date:"Y/m/d(D) h:i:s" }}</a>
+            </td>
+            <td>{{ req.get_sport_display }}</td>
+            <td>{{ req.get_location_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

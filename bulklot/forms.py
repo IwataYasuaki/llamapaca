@@ -6,5 +6,7 @@ LotReqTimeFormSet = inlineformset_factory(
     LotRequestTime,
     fields=['date', 'time'],
     can_delete=False,
-    widgets={'date': DateInput(attrs={"type":"date"})})
+    widgets={'date': DateInput(attrs={"type":"date"})},
+    extra=5,
+    )
 
