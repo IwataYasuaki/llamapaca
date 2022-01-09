@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from urllib.parse import urlparse
 import os
 import dj_database_url
-import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,12 +148,12 @@ BOOTSTRAP4 = {
 }
 
 # Settings for django-rq
-redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost:6959'))
+redis_url = urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost:6959'))
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
+        'HOST': redis_url.hostname,
+        'PORT': redis_url.port,
         'DB': 0,
         'PASSWORD': redis_url.password,
         'DEFAULT_TIMEOUT': 360,
