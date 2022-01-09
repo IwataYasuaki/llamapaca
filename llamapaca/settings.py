@@ -171,3 +171,5 @@ if not DEBUG:
     django_heroku.settings(locals())
     SECRET_KEY = os.environ['SECRET_KEY']
 
+SECRET_KEY = os.environ['SECRET_KEY']
+
