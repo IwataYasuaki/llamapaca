@@ -1,0 +1,35 @@
+{% extends 'bulklot/base.html' %}
+
+{% block title %}メンバー{% endblock %}
+
+{% block contents %}
+
+<h2>メンバー</h2>
+<a href="{% url 'bulklot:member_create' %}" class="btn btn-primary">新規メンバー登録</a>
+<a href="{% url 'bulklot:lot_req_list' %}" class="btn btn-primary">抽選申込</a>
+
+<br><br>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">名前</th>
+            <th scope="col">TMGBC登録番号</th>
+            <th scope="col">TMGBCパスワード</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in member_list %}
+        <tr>
+	    <td><a href="{% url 'bulklot:member_update' member.id %}">{{ member.name }}</a></td>
+            <td>{{ member.tmgbc_id }}</td>
+            <td>{{ member.tmgbc_password }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'bulklot:index' %}">ホームへ戻る</a>
+
+{% endblock %}
+

@@ -5,11 +5,8 @@
 {% block contents %}
 
 <h2>申込履歴</h2>
-<a href="{% url 'bulklot:lot_req_create' %}">
-<button type="button" class="btn btn-primary">
-新規申込
-</button>
-</a>
+<a href="{% url 'bulklot:lot_req_create' %}" class="btn btn-primary">新規抽選申込</a>
+<a href="{% url 'bulklot:member_list' %}" class="btn btn-primary">メンバー</a>
 
 <br><br>
 
@@ -34,5 +31,7 @@
         {% endfor %}
     </tbody>
 </table>
+
+<a href="{% url 'bulklot:index' %}">ホームへ戻る</a>
 
 {% endblock %}

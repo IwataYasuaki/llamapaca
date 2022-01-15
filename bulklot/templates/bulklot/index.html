@@ -1,0 +1,16 @@
+{% extends 'bulklot/base.html' %}
+
+{% block title %}ホーム{% endblock %}
+
+{% block contents %}
+
+<h2>ホーム</h2>
+
+<a href="{% url 'bulklot:lot_req_list' %}" class="btn btn-primary btn-lg btn-block">抽選申込</a>
+<a href="{% url 'bulklot:member_list' %}" class="btn btn-primary btn-lg btn-block">メンバー</a>
+<br>
+<a href="{% url 'registration:logout' %}" >ログアウト</a>
+
+{% endblock %}
+
+

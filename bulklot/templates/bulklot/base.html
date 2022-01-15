@@ -5,8 +5,12 @@
 {% block bootstrap4_content %}
 
 <div class="container">
-	<h1>TMGBC一括抽選</h1>
+	<a href="{% url 'bulklot:index' %}" class="text-reset text-decoration-none">
+		<h1>TMGBC一括抽選</h1>
+	</a>
 	{% block contents %}{% endblock %}
 </div>
+
+<br><br>
 
 {% endblock %}

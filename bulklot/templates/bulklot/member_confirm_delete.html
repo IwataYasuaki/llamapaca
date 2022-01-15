@@ -1,0 +1,23 @@
+{% extends 'bulklot/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}メンバー削除{% endblock %}
+
+{% block contents %}
+
+<h2>メンバー削除</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <p>"{{ object }}"を削除してよろしいですか？</p>
+    {% bootstrap_button "削除" button_class='btn-danger' %}
+    <a href="{% url 'bulklot:member_update' object.id %}" class="btn btn-secondary">キャンセル</a>
+</form>
+
+<br>
+
+
+{% endblock %}
+
+
+

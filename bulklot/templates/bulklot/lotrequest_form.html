@@ -7,29 +7,29 @@
 
 <h2>申込フォーム</h2>
 
-{{ tmgbc }}
-
 {% bootstrap_form_errors form %}
 {% bootstrap_formset_errors lotreqtime_formset %}
 <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {{ lotreqtime_formset.management_form }}
+
     {% for lotreqtime in lotreqtime_formset %}
+        <div class="card bg-light mb-3">
+        <div class="card-body">
         <div class="row">
-	    {% bootstrap_form lotreqtime form_group_class='form-group col-6' %}
+	    {% bootstrap_form lotreqtime form_group_class='form-group col-sm' %}
+	</div>
+	</div>
 	</div>
     {% endfor %}
-    {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            Submit
-        </button>
-    {% endbuttons %}
+
+    {% bootstrap_button "申込" %}
 </form>
 
-<a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>
+<br>
 
-<br><br>
+<a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>
 
 {% endblock %}
 

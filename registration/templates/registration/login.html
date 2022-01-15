@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}ログイン{% endblock %}
+
+{% block contents %}
+
+<h2>ログイン</h2>
+
+{% if next %}
+    {% if user.is_authenticated %}
+        {% bootstrap_alert "Your account doesn't have access to this page. To proceed, please login with an account that has access." alert_type='danger' %}
+    {% else %}
+        {% bootstrap_alert "Please login to see this page." alert_type='danger' %}
+    {% endif %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="ログイン" class="btn btn-primary">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+
+<br>
+
+{# Assumes you set up the password_reset view in your URLconf #}
+<p><a href="{% url 'registration:password_reset' %}">パスワードをお忘れですか？</a></p>
+<p><a href="{% url 'registration:signup' %}">ユーザー登録</a></p>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'bulklot/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}メンバー登録フォーム{% endblock %}
+
+{% block contents %}
+
+<h2>メンバー登録フォーム</h2>
+
+{% bootstrap_form_errors form %}
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% if object %}
+        {% bootstrap_button "変更" %}
+        <a href="{% url 'bulklot:member_delete' object.id %}" class="btn btn-danger">削除</a>
+    {% else %}
+        {% bootstrap_button "登録" %}
+    {% endif %}
+</form>
+
+<br>
+
+<a href="{% url 'bulklot:member_list' %}">一覧へ戻る</a>
+
+
+{% endblock %}
+
+

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bulklot.apps.BulklotConfig',
+    'registration.apps.RegistrationConfig',
     'bootstrap4',
     'django_rq',
 ]
@@ -73,6 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'llamapaca.wsgi.application'
 
+LOGIN_REDIRECT_URL = '/bulklot'
+LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

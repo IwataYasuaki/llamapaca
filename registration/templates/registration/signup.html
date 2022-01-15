@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}ユーザー登録{% endblock %}
+
+{% block contents %}
+
+<h2>ユーザー登録</h2>
+
+{% bootstrap_form_errors form %}
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="登録" class="btn btn-primary">
+</form>
+
+<br>
+
+<p><a href="{% url 'registration:login' %}">ログイン画面へ</a></p>
+
+{% endblock %}
+
