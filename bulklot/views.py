@@ -14,6 +14,9 @@ class Index(LoginRequiredMixin, generic.base.TemplateView):
 class LotReqList(LoginRequiredMixin, generic.ListView):
     model = LotRequest
 
+    def get_queryset(self):
+        return LotRequest.objects.filter(requester=self.request.user)
+
 class LotReqDetail(LoginRequiredMixin, generic.DetailView):
     model = LotRequest
 
@@ -47,6 +50,7 @@ class LotReqCreate(LoginRequiredMixin, generic.CreateView):
         lotReqTimeFormSet = context['lotreqtime_formset'];
 
         if form.is_valid() and lotReqTimeFormSet.is_valid():
+            form.instance.requester = self.request.user
             self.object = form.save()
             lotReqTimeFormSet.instance = self.object
             lotReqTimeFormSet.save()

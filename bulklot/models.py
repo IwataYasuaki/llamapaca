@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class LotRequest(models.Model):
+    requester = models.ForeignKey(User, verbose_name="申込者", on_delete=models.CASCADE)
     req_date = models.DateTimeField(verbose_name="申込日", auto_now_add=True)
     location = models.CharField(
                    verbose_name="場所", 
