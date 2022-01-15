@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lotrequesttime',
             name='member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='bulklot.member', verbose_name='メンバー'),
+            field=models.ForeignKey(default=4, on_delete=django.db.models.deletion.DO_NOTHING, to='bulklot.member', verbose_name='メンバー'),
+            preserve_default=False,
         ),
     ]
