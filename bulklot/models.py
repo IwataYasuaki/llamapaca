@@ -30,7 +30,7 @@ class Member(models.Model):
 
 class LotRequestTime(models.Model):
     lot_request = models.ForeignKey(LotRequest, verbose_name="抽選申込", on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, verbose_name="メンバー", on_delete=models.DO_NOTHING)
+    member = models.ForeignKey(Member, verbose_name="メンバー", on_delete=models.SET_NULL, blank=False, null=True)
     date = models.DateField(verbose_name="日付")
     time = models.CharField(
                verbose_name="時間帯",
