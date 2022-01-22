@@ -15,7 +15,7 @@ class LotReqList(LoginRequiredMixin, generic.ListView):
     model = LotRequest
 
     def get_queryset(self):
-        return LotRequest.objects.filter(requester=self.request.user)
+        return LotRequest.objects.filter(requester=self.request.user).order_by('-req_date')
 
 class LotReqDetail(LoginRequiredMixin, generic.DetailView):
     model = LotRequest
