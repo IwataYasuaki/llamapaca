@@ -7,37 +7,75 @@ from time import sleep
 from django_rq import job
 
 @job
-def login_to_tmgbc(sport, location_page, location_id, date, time):
-    url = "https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html"
+def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
+
+    print(lotReqTime.member, date, time)
+
+    # ステータスを処理中に変更
+    lotReqTime.status = '20'
+    lotReqTime.save()
+
+    # Selenium Web Driver 初期設定
     options = Options()
     options.add_argument('--headless')
     wd = webdriver.Chrome(options=options)
-    wd.get(url)
-    wd.find_element_by_id('login').click()
-    sleep(4)
-    wd.find_element_by_id('userid').send_keys('86772511')
-    wd.find_element_by_id('passwd').send_keys('19890101')
-    wd.find_element_by_id('login').click()
-    sleep(0.5)
-    wd.find_element_by_id('goLotSerach').click()
-    sleep(0.5)
-    wd.find_element_by_css_selector('input[value="' + sport + '"]').click()
-    wd.find_element_by_id('doSearch').click()
-    sleep(0.5)
-    while not wd.find_element_by_id('offset').get_attribute('value') == location_page:
-        wd.find_element_by_id('goNextPager').click()
+
+    try:
+        # TMGBCトップ
+        wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
         sleep(0.5)
-    wd.find_element_by_name('layoutChildBody:childForm:igcdListItems:' + location_id + ':doAreaSet').click()
-    sleep(0.5)
-    wd.find_element_by_css_selector('a.calclick[onclick="javascript:selectCalendarDate(' + date + ');return false;"]').click()
-    sleep(0.5)
-    wd.find_element_by_css_selector('input[value="' + time + '"]').click()
-    wd.find_element_by_id('doDateTimeSet').click()
-    sleep(0.5)
-    wd.find_element_by_id('doOnceFix').click()
-    wait = WebDriverWait(wd, 10)
-    wait.until(expected_conditions.alert_is_present())
-    Alert(wd).accept()
-    sleep(0.5)
-    wd.quit()
+        wd.find_element_by_id('login').click()
+    
+        # ログイン
+        if wd.title == 'ログイン／TMGBC':
+            sleep(4)
+            wd.find_element_by_id('userid').send_keys(lotReqTime.member.tmgbc_id)
+            wd.find_element_by_id('passwd').send_keys(lotReqTime.member.tmgbc_password)
+            wd.find_element_by_id('login').click()
+    
+        # マイページメイン
+        sleep(0.5)
+        wd.find_element_by_id('goLotSerach').click()
+    
+        # 抽選種目
+        sleep(0.5)
+        wd.find_element_by_css_selector('input[value="' + sport + '"]').click()
+        wd.find_element_by_id('doSearch').click()
+    
+        # 抽選公園一覧
+        sleep(0.5)
+        while not wd.find_element_by_id('offset').get_attribute('value') == location_page:
+            wd.find_element_by_id('goNextPager').click()
+            sleep(0.5)
+        wd.find_element_by_name('layoutChildBody:childForm:igcdListItems:' + location_id + ':doAreaSet').click()
+    
+        # 抽選申込日時設定
+        sleep(0.5)
+        wd.find_element_by_css_selector('a.calclick[onclick="javascript:selectCalendarDate(' + date + ');return false;"]').click()
+        sleep(0.5)
+        wd.find_element_by_css_selector('input[value="' + time + '"]').click()
+        wd.find_element_by_id('doDateTimeSet').click()
+    
+        # 抽選申込内容確認
+        sleep(0.5)
+        wd.find_element_by_id('doOnceFix').click()
+        wait = WebDriverWait(wd, 10)
+        wait.until(expected_conditions.alert_is_present())
+        Alert(wd).accept()
+
+        # Selenium Web Driver 終了
+        wd.quit()
+
+        # ステータスを完了に変更
+        lotReqTime.status = '30'
+        lotReqTime.save()
+
+    except Exception as e:
+
+        print(e)
+
+        # ステータスをエラーに変更
+        lotReqTime.status = '40'
+        lotReqTime.save()
+
 

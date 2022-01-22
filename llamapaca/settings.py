@@ -144,10 +144,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
-    "error_css_class": "bootstrap4-error",
-    "required_css_class": "bootstrap4-required",
-    "javascript_in_head": True,
-    "include_jquery": True,
+    'error_css_class': 'bootstrap4-error',
+    'required_css_class': 'bootstrap4-required',
+    'javascript_in_head': True,
+    'include_jquery': True,
+    'horizontal_label_class': 'col-3',
+    'horizontal_field_class': 'col-9',
 }
 
 # Settings for django-rq

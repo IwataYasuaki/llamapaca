@@ -10,7 +10,7 @@
 {% bootstrap_form_errors form %}
 <form method="post">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {% bootstrap_form form layout='horizontal' %}
     {% if object %}
         {% bootstrap_button "変更" %}
         <a href="{% url 'bulklot:member_delete' object.id %}" class="btn btn-danger">削除</a>

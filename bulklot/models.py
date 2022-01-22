@@ -43,4 +43,16 @@ class LotRequestTime(models.Model):
                    ('1700_1900','17:00～'),
                ]
            )
+    status = models.CharField(
+                verbose_name="ステータス", 
+                max_length=40,
+                choices=[
+                    ('10','待機中'),
+                    ('20','処理中'),
+                    ('30','完了'),
+                    ('40','エラー'),
+                ],
+                blank=False,
+                default='10',
+            )
 

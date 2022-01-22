@@ -11,14 +11,14 @@
 {% bootstrap_formset_errors lotreqtime_formset %}
 <form method="post">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {% bootstrap_form form layout='horizontal' %}
     {{ lotreqtime_formset.management_form }}
 
     {% for lotreqtime in lotreqtime_formset %}
         <div class="card bg-light mb-3">
         <div class="card-body">
         <div class="row">
-	    {% bootstrap_form lotreqtime form_group_class='form-group col-sm' %}
+	    {% bootstrap_form lotreqtime form_group_class='form-group col-lg' layout='horizontal' %}
 	</div>
 	</div>
 	</div>
