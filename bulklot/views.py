@@ -22,7 +22,7 @@ class LotReqDetail(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['lotreqtime_list'] = self.object.lotrequesttime_set.all()
+        context['lotreqtime_list'] = self.object.lotrequesttime_set.order_by('id')
         return context
 
 class LotReqCreate(LoginRequiredMixin, generic.CreateView):
