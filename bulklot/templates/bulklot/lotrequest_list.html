@@ -23,7 +23,7 @@
         <tr>
             <td>
                 <a href="{% url 'bulklot:lot_req_detail' req.id %}">
-                {{ req.req_date | date:"Y/m/d(D) h:i:s" }}</a>
+                {{ req.req_date | date:"Y/m/d(D) H:i:s" }}</a>
             </td>
             <td>{{ req.get_sport_display }}</td>
             <td>{{ req.get_location_display }}</td>
