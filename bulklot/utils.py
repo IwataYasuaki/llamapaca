@@ -24,9 +24,15 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         # TMGBCトップ
         wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
         sleep(0.5)
+        print("title: ", wd.title)
+        # print("title: ", wd.page_source)
+        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('login').click()
     
         # ログイン
+        sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         if wd.title == 'ログイン／TMGBC':
             sleep(4)
             wd.find_element_by_id('userid').send_keys(lotReqTime.member.tmgbc_id)
@@ -35,15 +41,21 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # マイページメイン
         sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('goLotSerach').click()
     
         # 抽選種目
         sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('input[value="' + sport + '"]').click()
         wd.find_element_by_id('doSearch').click()
     
         # 抽選公園一覧
         sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         while not wd.find_element_by_id('offset').get_attribute('value') == location_page:
             wd.find_element_by_id('goNextPager').click()
             sleep(0.5)
@@ -51,6 +63,8 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込日時設定
         sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('a.calclick[onclick="javascript:selectCalendarDate(' + date + ');return false;"]').click()
         sleep(0.5)
         wd.find_element_by_css_selector('input[value="' + time + '"]').click()
@@ -58,10 +72,17 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込内容確認
         sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('doOnceFix').click()
         wait = WebDriverWait(wd, 10)
         wait.until(expected_conditions.alert_is_present())
         Alert(wd).accept()
+    
+        # 抽選申込完了
+        sleep(0.5)
+        print("title: ", wd.title)
+        print(wd.find_element_by_tag_name('body').text)
 
         # Selenium Web Driver 終了
         wd.quit()
