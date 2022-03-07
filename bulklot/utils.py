@@ -24,6 +24,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         # TMGBCトップ
         wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         # print("title: ", wd.page_source)
         print(wd.find_element_by_tag_name('body').text)
@@ -31,6 +32,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # ログイン
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         if wd.title == 'ログイン／TMGBC':
@@ -41,12 +43,14 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # マイページメイン
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('goLotSerach').click()
     
         # 抽選種目
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('input[value="' + sport + '"]').click()
@@ -54,6 +58,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選公園一覧
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         while not wd.find_element_by_id('offset').get_attribute('value') == location_page:
@@ -63,6 +68,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込日時設定
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('a.calclick[onclick="javascript:selectCalendarDate(' + date + ');return false;"]').click()
@@ -72,6 +78,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込内容確認
         sleep(0.5)
+        print("=============================================================")
         print("title: ", wd.title)
         print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('doOnceFix').click()
@@ -81,18 +88,24 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込完了
         sleep(0.5)
+        body = wd.find_element_by_tag_name('body').text
+        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
+        print(body)
+
+        # ステータスを完了に変更
+        if '抽選の申込みが完了しました。' in body:
+            lotReqTime.status = '30'
+            lotReqTime.save()
+        else:
+            raise Exception('抽選申込が正常に完了しませんでした。')
 
         # Selenium Web Driver 終了
         wd.quit()
 
-        # ステータスを完了に変更
-        lotReqTime.status = '30'
-        lotReqTime.save()
-
     except Exception as e:
 
+        print("=============================================================")
         print(e)
 
         # ステータスをエラーに変更
