@@ -9,18 +9,18 @@ from django_rq import job
 @job
 def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
 
-    print(lotReqTime.member, date, time)
-
-    # ステータスを処理中に変更
-    lotReqTime.status = '20'
-    lotReqTime.save()
-
-    # Selenium Web Driver 初期設定
-    options = Options()
-    options.add_argument('--headless')
-    wd = webdriver.Chrome(options=options)
-
     try:
+        print(lotReqTime.member, date, time)
+
+        # ステータスを処理中に変更
+        lotReqTime.status = '20'
+        lotReqTime.save()
+    
+        # Selenium Web Driver 初期設定
+        options = Options()
+        options.add_argument('--headless')
+        wd = webdriver.Chrome(options=options)
+    
         # TMGBCトップ
         wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
         sleep(0.5)

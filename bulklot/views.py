@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import LotRequest, LotRequestTime, Member
-from .forms import LotReqTimeFormSet, lotReqTimeFormSet_factory
+from .forms import lotReqTimeFormSet_factory
 from .utils import login_to_tmgbc
 
 class Index(LoginRequiredMixin, generic.base.TemplateView):
@@ -32,8 +32,10 @@ class LotReqCreate(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
+            LotReqTimeFormSet = lotReqTimeFormSet_factory()
             context['lotreqtime_formset'] = LotReqTimeFormSet(self.request.POST)
         else:
+            # 自分のメンバーの人数×2のLotReqTimeフォームを用意する
             initial = []
             members = Member.objects.filter(owner=self.request.user) 
             amonthago = datetime.date.today() + datetime.timedelta(days=31)
@@ -41,8 +43,14 @@ class LotReqCreate(LoginRequiredMixin, generic.CreateView):
             for member in members:
                 initial += [{'member': member, 'date': date, 'time': '1300_1500'}]
                 initial += [{'member': member, 'date': date, 'time': '1300_1500'}]
-            lotReqTimeFormSet = lotReqTimeFormSet_factory(len(initial)-1)
-            context['lotreqtime_formset'] = lotReqTimeFormSet(initial=initial)
+            LotReqTimeFormSet = lotReqTimeFormSet_factory(len(initial)-1)
+            lrtfs = LotReqTimeFormSet(initial=initial)
+
+            # 自分のメンバーしか選べなくする
+            for lrtf in lrtfs.forms:
+                lrtf.fields['member'].queryset = Member.objects.filter(owner=self.request.user)
+
+            context['lotreqtime_formset'] = lrtfs
         return context
 
     def form_valid(self, form):
