@@ -48,7 +48,7 @@ class LotReqCreate(LoginRequiredMixin, generic.CreateView):
 
             # 自分のメンバーしか選べなくする
             for lrtf in lrtfs.forms:
-                lrtf.fields['member'].queryset = Member.objects.filter(owner=self.request.user)
+                lrtf.fields['member'].queryset = members
 
             context['lotreqtime_formset'] = lrtfs
         return context
