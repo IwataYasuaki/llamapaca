@@ -12,5 +12,6 @@ urlpatterns = [
     path('member/form', views.MemberCreate.as_view(), name='member_create'),
     path('member/<int:pk>', views.MemberUpdate.as_view(), name='member_update'),
     path('member/<int:pk>/delete', views.MemberDelete.as_view(), name='member_delete'),
+    path('lotresult/', views.LotResultList.as_view(), name='lot_result_list'),
 ]
 

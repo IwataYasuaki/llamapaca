@@ -17,7 +17,6 @@
         <th scope="col">メンバー</th>
         <th scope="col">日時</th>
         <th scope="col">ステータス</th>
-        <th scope="col">抽選結果</th>
       </tr>
     </thead>
     <tbody>
@@ -26,7 +25,6 @@
         <td>{{ lotreqtime.member }}</td>
         <td>{{ lotreqtime.date | date:"m/d(D)" }} {{ lotreqtime.get_time_display }}</td>
         <td id='{{ lotreqtime.id }}-status'>{{ lotreqtime.get_status_display }}</td>
-        <td id='{{ lotreqtime.id }}-result'>{{ lotreqtime.get_result_display }}</td>
       </tr>
       {% endfor %}
     </tbody>

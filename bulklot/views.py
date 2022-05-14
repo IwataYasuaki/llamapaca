@@ -4,7 +4,7 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import LotRequest, LotRequestTime, Member
+from .models import LotRequest, LotRequestTime, Member, LotResult
 from .forms import lotReqTimeFormSet_factory
 from .utils import login_to_tmgbc
 
@@ -106,4 +106,10 @@ class MemberDelete(LoginRequiredMixin, generic.DeleteView):
     model = Member
     fields = ['name', 'tmgbc_id', 'tmgbc_password']
     success_url = reverse_lazy('bulklot:member_list')
+
+class LotResultList(LoginRequiredMixin, generic.ListView):
+    model = LotResult
+
+    def get_queryset(self):
+        return LotResult.objects.filter(owner=self.request.user, active=True).order_by('member', 'datetime')
 

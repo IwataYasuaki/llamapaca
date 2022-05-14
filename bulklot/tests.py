@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Member
+from .models import Member, LotResult
+from datetime import date
 
 class MemberListViewTests(TestCase):
     def test_member(self):
@@ -232,4 +233,75 @@ class LotReqDetailViewTests(TestCase):
         # assert
         members = response.context['lotreqtime_formset'][0].fields['member'].queryset
         self.assertQuerysetEqual(members, [my_member])
+
+class LotResultListViewTests(TestCase):
+    def test_result(self):
+        """
+        自分の抽選結果が表示される。
+        """
+        today = date.today()
+
+        # テストユーザ
+        user = User.objects.create_user('tester', password='llamapaca')
+        other = User.objects.create_user('other', password='llamapaca')
+
+        # テストメンバー
+        my_member = Member.objects.create(
+            owner=user, 
+            name='my_member', 
+            tmgbc_id='11111111', 
+            tmgbc_password='11111111',
+        )
+        others_member = Member.objects.create(
+            owner=other, 
+            name='others_member', 
+            tmgbc_id='22222222', 
+            tmgbc_password='22222222',
+        )
+
+        # テスト抽選結果
+        my_active_result = LotResult.objects.create(
+            owner=user,
+            member=my_member,
+            datetime='2022年6月25日 土曜日 15時～17時',
+            sport='テニス（人工芝）',
+            location='舎人公園',
+            result='○',
+            pubdate=today,
+            active=True,
+        )
+        my_inactive_result = LotResult.objects.create(
+            owner=user,
+            member=my_member,
+            datetime='2022年6月25日 土曜日 15時～17時',
+            sport='テニス（人工芝）',
+            location='舎人公園',
+            result='○',
+            pubdate=today,
+            active=False,
+        )
+        others_active_result = LotResult.objects.create(
+            owner=other,
+            member=others_member,
+            datetime='2022年6月25日 土曜日 15時～17時',
+            sport='テニス（人工芝）',
+            location='舎人公園',
+            result='○',
+            pubdate=today,
+            active=True,
+        )
+
+        # ログイン
+        self.client.force_login(user)
+
+        # メンバーリスト画面をGET
+        response = self.client.get(reverse('bulklot:lot_result_list'))
+
+        # assert
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '抽選結果')
+        self.assertQuerysetEqual(
+            list(response.context['lotresult_list']),
+            [my_active_result,],
+        )
 

@@ -7,6 +7,9 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from django_rq import job
 
+from datetime import date
+from bulklot.models import Member, LotResult
+
 @job
 def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
 
@@ -122,16 +125,16 @@ def get_result(member):
     # TMGBCトップ
     wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
     sleep(0.5)
-    print("=============================================================")
+    #print("=============================================================")
     print("title: ", wd.title)
-    print(wd.find_element_by_tag_name('body').text)
+    #print(wd.find_element_by_tag_name('body').text)
     wd.find_element_by_id('login').click()
 
     # ログイン
     sleep(0.5)
-    print("=============================================================")
+    #print("=============================================================")
     print("title: ", wd.title)
-    print(wd.find_element_by_tag_name('body').text)
+    #print(wd.find_element_by_tag_name('body').text)
     if wd.title == 'ログイン／TMGBC':
         sleep(4)
         wd.find_element_by_id('userid').send_keys(member.tmgbc_id)
@@ -140,9 +143,9 @@ def get_result(member):
 
     # マイページメイン
     sleep(0.5)
-    print("=============================================================")
+    #print("=============================================================")
     print("title: ", wd.title)
-    print(wd.find_element_by_tag_name('body').text)
+    #print(wd.find_element_by_tag_name('body').text)
     lotStatusListItems = wd.find_elements_by_css_selector('#lotStatusListItems > tr')
     results = []
 
@@ -151,8 +154,17 @@ def get_result(member):
         ymd = lotStatusListItem.find_element(By.ID, 'useymdLabel').text
         stime = lotStatusListItem.find_element(By.ID, 'stimeLabel').text
         etime = lotStatusListItem.find_element(By.ID, 'etimeLabel').text
+        sport = lotStatusListItem.find_element(By.ID, 'clsnamem').text
+        location = lotStatusListItem.find_element(By.ID, 'bgcdnamem').text
         status = lotStatusListItem.find_element(By.ID, 'lotStateLabel').text
-        results.append({'ymd': ymd, 'stime': stime, 'etime': etime, 'status': status})
+        results.append({
+            'ymd': ymd, 
+            'stime': stime, 
+            'etime': etime, 
+            'sport': sport, 
+            'location': location, 
+            'status': status,
+        })
 
     # Selenium Web Driver 終了
     wd.quit()
@@ -166,20 +178,79 @@ def get_result_test(member):
         return [{'ymd': '2022年4月16日 土曜日',
                  'stime': '15時',
                  'etime': '17時',
+                 'sport': 'テニス（人工芝）', 
+                 'location': '舎人公園', 
                  'status': '【当選】確定する'},
                 {'ymd': '2022年4月16日 土曜日',
                  'stime': '15時',
                  'etime': '17時',
+                 'sport': 'テニス（人工芝）', 
+                 'location': '舎人公園', 
                  'status': '落選'}]
     elif member.name == '岩田弓華':
         return [{'ymd': '2022年4月2日 土曜日',
                  'stime': '15時',
                  'etime': '17時',
+                 'sport': 'テニス（人工芝）', 
+                 'location': '舎人公園', 
                  'status': '【当選】確定する'},
                 {'ymd': '2022年4月16日 土曜日',
                  'stime': '15時',
                  'etime': '17時',
+                 'sport': 'テニス（人工芝）', 
+                 'location': '舎人公園', 
                  'status': '落選'}]
+    return
 
+def get_results():
 
+    today = date.today()
+
+    # 過去の抽選結果情報を非アクティブに変更
+    lotResults = LotResult.objects.filter(active=True)
+    for lotResult in lotResults:
+        lotResult.active = False
+        lotResult.save()
+
+    # メンバーを取得
+    members = Member.objects.all()
+
+    for member in members:
+
+        print('----')
+        print(member)
+
+        results = []
+
+        # 抽選結果一覧をTMGBCから取得
+        try:
+            results = get_result(member)
+            #results = get_result_test(member)
+        except Exception as e:
+            print(e)
+
+        # 抽選結果を保存
+        if len(results) > 0: 
+            for result in results:
+
+                status = ''
+
+                if '落選' in result['status']:
+                    status = '×'
+                elif '当選' in result['status']:
+                    status = '○'
+                else:
+                    status = '？'
+
+                lotResult = LotResult.objects.create(
+                    owner=member.owner,
+                    member=member,
+                    datetime=result['ymd']+' '+result['stime']+'～'+result['etime'],
+                    sport=result['sport'],
+                    location=result['location'],
+                    result=status,
+                    pubdate=today,
+                )
+                print(lotResult)
+    return
 

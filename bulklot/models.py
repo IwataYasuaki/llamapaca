@@ -61,27 +61,56 @@ class LotRequestTime(models.Model):
                 blank=False,
                 default='10',
             )
-    result = models.CharField(
-                verbose_name="抽選結果", 
-                max_length=40,
-                choices=[
-                    ('10','未取得'),
-                    ('15','取得中'),
-                    ('20','取得失敗'),
-                    ('30','当選'),
-                    ('40','当選(確定済)'),
-                    ('50','落選'),
-                ],
-                blank=False,
-                default='10',
-            )
 
     def __str__(self):
         return self.lot_request.__str__() + '/' + \
                self.member.name + '/' + \
                self.date.strftime('%Y年%-m月%-d日') + '/' + \
                self.get_time_display() + '/' + \
-               self.get_status_display() + '/' + \
-               self.get_result_display()
+               self.get_status_display()
+
+class LotResult(models.Model):
+    owner = models.ForeignKey(
+                User, 
+                verbose_name="所有者", 
+                on_delete=models.CASCADE
+            )
+    member = models.ForeignKey(
+                 Member, verbose_name="メンバー", 
+                 on_delete=models.SET_NULL, 
+                 blank=False, 
+                 null=True,
+             )
+    datetime = models.CharField(
+                   verbose_name="希望日時",
+                   max_length=100,
+               )
+    sport = models.CharField(
+                verbose_name="種目", 
+                max_length=100,
+            )
+    location = models.CharField(
+                   verbose_name="公園名", 
+                   max_length=100,
+               )
+    result = models.CharField(
+                 verbose_name="抽選結果", 
+                 max_length=40,
+             )
+    pubdate = models.DateField(
+                  verbose_name="取得日"
+              )
+    active = models.BooleanField(
+                 default=True,
+             )
+
+    def __str__(self):
+        return self.member.name + '/' + \
+               self.datetime + '/' + \
+               self.sport + '/' + \
+               self.location + '/' + \
+               self.result + '/' + \
+               self.pubdate.strftime('%Y年%-m月%-d日') + '/' + \
+               str(self.active)
 
 
