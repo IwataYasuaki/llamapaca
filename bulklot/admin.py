@@ -7,9 +7,9 @@ class LotReqTimeInline(admin.TabularInline):
 
 class LotReqAdmin(admin.ModelAdmin):
     readonly_fields = ('req_date',)
-    fields = ('req_date', 'location')
+    fields = ('req_date', 'requester', 'location', 'sport')
     inlines = [LotReqTimeInline]
-    list_display = ('req_date', 'location')
+    list_display = ('req_date', 'requester', 'location', 'sport')
 
 class LotReqTimeAdmin(admin.ModelAdmin):
     list_display = ('lot_request', 'member', 'date', 'time')

@@ -165,6 +165,7 @@ RQ_QUEUES = {
     },
 }
 RQ_API_TOKEN = 'rq'
+RQ_SHOW_ADMIN_LINK = True
 
 try:
     from .local_settings import *

@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.by import By
 from time import sleep
 from django_rq import job
 
@@ -26,7 +27,6 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         sleep(0.5)
         print("=============================================================")
         print("title: ", wd.title)
-        # print("title: ", wd.page_source)
         print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('login').click()
     
@@ -111,5 +111,75 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         # ステータスをエラーに変更
         lotReqTime.status = '40'
         lotReqTime.save()
+
+
+def get_result(member):
+    # Selenium Web Driver 初期設定
+    options = Options()
+    options.add_argument('--headless')
+    wd = webdriver.Chrome(options=options)
+
+    # TMGBCトップ
+    wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
+    sleep(0.5)
+    print("=============================================================")
+    print("title: ", wd.title)
+    print(wd.find_element_by_tag_name('body').text)
+    wd.find_element_by_id('login').click()
+
+    # ログイン
+    sleep(0.5)
+    print("=============================================================")
+    print("title: ", wd.title)
+    print(wd.find_element_by_tag_name('body').text)
+    if wd.title == 'ログイン／TMGBC':
+        sleep(4)
+        wd.find_element_by_id('userid').send_keys(member.tmgbc_id)
+        wd.find_element_by_id('passwd').send_keys(member.tmgbc_password)
+        wd.find_element_by_id('login').click()
+
+    # マイページメイン
+    sleep(0.5)
+    print("=============================================================")
+    print("title: ", wd.title)
+    print(wd.find_element_by_tag_name('body').text)
+    lotStatusListItems = wd.find_elements_by_css_selector('#lotStatusListItems > tr')
+    results = []
+
+    # 抽選結果を取得
+    for lotStatusListItem in lotStatusListItems:
+        ymd = lotStatusListItem.find_element(By.ID, 'useymdLabel').text
+        stime = lotStatusListItem.find_element(By.ID, 'stimeLabel').text
+        etime = lotStatusListItem.find_element(By.ID, 'etimeLabel').text
+        status = lotStatusListItem.find_element(By.ID, 'lotStateLabel').text
+        results.append({'ymd': ymd, 'stime': stime, 'etime': etime, 'status': status})
+
+    # Selenium Web Driver 終了
+    wd.quit()
+
+    return results
+
+
+def get_result_test(member):
+    #raise ValueError("error!")
+    if member.name == '岩田康明':
+        return [{'ymd': '2022年4月16日 土曜日',
+                 'stime': '15時',
+                 'etime': '17時',
+                 'status': '【当選】確定する'},
+                {'ymd': '2022年4月16日 土曜日',
+                 'stime': '15時',
+                 'etime': '17時',
+                 'status': '落選'}]
+    elif member.name == '岩田弓華':
+        return [{'ymd': '2022年4月2日 土曜日',
+                 'stime': '15時',
+                 'etime': '17時',
+                 'status': '【当選】確定する'},
+                {'ymd': '2022年4月16日 土曜日',
+                 'stime': '15時',
+                 'etime': '17時',
+                 'status': '落選'}]
+
 
 

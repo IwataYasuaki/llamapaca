@@ -10,24 +10,28 @@
 <p>種目：{{ lotrequest.get_sport_display }}</p>
 <p>場所：{{ lotrequest.get_location_display }}</p>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">メンバー</th>
-      <th scope="col">日時</th>
-      <th scope="col">ステータス</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for lotreqtime in lotreqtime_list %}
-    <tr>
-      <td>{{ lotreqtime.member }}</td>
-      <td>{{ lotreqtime.date | date:"m/d(D)" }} {{ lotreqtime.get_time_display }}</td>
-      <td id='{{ lotreqtime.id }}'>{{ lotreqtime.get_status_display }}</td>
-    </tr>
-{% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">メンバー</th>
+        <th scope="col">日時</th>
+        <th scope="col">ステータス</th>
+        <th scope="col">抽選結果</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lotreqtime in lotreqtime_list %}
+      <tr>
+        <td>{{ lotreqtime.member }}</td>
+        <td>{{ lotreqtime.date | date:"m/d(D)" }} {{ lotreqtime.get_time_display }}</td>
+        <td id='{{ lotreqtime.id }}-status'>{{ lotreqtime.get_status_display }}</td>
+        <td id='{{ lotreqtime.id }}-result'>{{ lotreqtime.get_result_display }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 
 <a href="{% url 'bulklot:lot_req_list' %}">一覧へ戻る</a>

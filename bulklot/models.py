@@ -19,6 +19,12 @@ class LotRequest(models.Model):
                 default='テニス（人工芝）',
             )
 
+    def __str__(self):
+        return self.req_date.strftime('%Y年%-m月%-d日%H:%M') + '/' + \
+               self.requester.username + '/' + \
+               self.get_location_display() + '/' + \
+               self.get_sport_display()
+
 class Member(models.Model):
     owner = models.ForeignKey(User, verbose_name="所有者", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="名前", max_length=100, blank=False)
@@ -55,4 +61,27 @@ class LotRequestTime(models.Model):
                 blank=False,
                 default='10',
             )
+    result = models.CharField(
+                verbose_name="抽選結果", 
+                max_length=40,
+                choices=[
+                    ('10','未取得'),
+                    ('15','取得中'),
+                    ('20','取得失敗'),
+                    ('30','当選'),
+                    ('40','当選(確定済)'),
+                    ('50','落選'),
+                ],
+                blank=False,
+                default='10',
+            )
+
+    def __str__(self):
+        return self.lot_request.__str__() + '/' + \
+               self.member.name + '/' + \
+               self.date.strftime('%Y年%-m月%-d日') + '/' + \
+               self.get_time_display() + '/' + \
+               self.get_status_display() + '/' + \
+               self.get_result_display()
+
 

@@ -200,3 +200,36 @@ class LotReqCreateViewTests(TestCase):
         members = response.context['lotreqtime_formset'][0].fields['member'].queryset
         self.assertQuerysetEqual(members, [my_member])
 
+class LotReqDetailViewTests(TestCase):
+    def test_member(self):
+        """
+        自分のメンバーのみ選べること。
+        """
+        # テストユーザ
+        user = User.objects.create_user('tester', password='llamapaca')
+        other = User.objects.create_user('other', password='llamapaca')
+
+        # テストメンバー
+        my_member = Member.objects.create(
+            owner=user, 
+            name='my_member', 
+            tmgbc_id='11111111', 
+            tmgbc_password='11111111',
+        )
+        others_member = Member.objects.create(
+            owner=other, 
+            name='others_member', 
+            tmgbc_id='22222222', 
+            tmgbc_password='22222222',
+        )
+
+        # ログイン
+        self.client.force_login(user)
+
+        # 抽選申込フォームをGET
+        response = self.client.get(reverse('bulklot:lot_req_create'))
+
+        # assert
+        members = response.context['lotreqtime_formset'][0].fields['member'].queryset
+        self.assertQuerysetEqual(members, [my_member])
+
