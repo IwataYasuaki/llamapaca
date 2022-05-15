@@ -11,10 +11,14 @@ from datetime import date
 from bulklot.models import Member, LotResult
 
 @job
-def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
+def login_to_tmgbc(sport, location_page, location_id, lotReqTime):
 
     try:
-        print(lotReqTime.member, date, time)
+        date = lotReqTime.date.strftime('%Y,%-m,%-d')
+        time = lotReqTime.time
+
+        print('----')
+        print(lotReqTime)
 
         # ステータスを処理中に変更
         lotReqTime.status = '20'
@@ -28,16 +32,13 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         # TMGBCトップ
         wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
+        #print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('login').click()
     
         # ログイン
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         if wd.title == 'ログイン／TMGBC':
             sleep(4)
             wd.find_element_by_id('userid').send_keys(lotReqTime.member.tmgbc_id)
@@ -46,24 +47,18 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # マイページメイン
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('goLotSerach').click()
     
         # 抽選種目
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('input[value="' + sport + '"]').click()
         wd.find_element_by_id('doSearch').click()
     
         # 抽選公園一覧
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         while not wd.find_element_by_id('offset').get_attribute('value') == location_page:
             wd.find_element_by_id('goNextPager').click()
             sleep(0.5)
@@ -71,9 +66,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込日時設定
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_css_selector('a.calclick[onclick="javascript:selectCalendarDate(' + date + ');return false;"]').click()
         sleep(0.5)
         wd.find_element_by_css_selector('input[value="' + time + '"]').click()
@@ -81,9 +74,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
     
         # 抽選申込内容確認
         sleep(0.5)
-        print("=============================================================")
         print("title: ", wd.title)
-        print(wd.find_element_by_tag_name('body').text)
         wd.find_element_by_id('doOnceFix').click()
         wait = WebDriverWait(wd, 10)
         wait.until(expected_conditions.alert_is_present())
@@ -92,9 +83,7 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
         # 抽選申込完了
         sleep(0.5)
         body = wd.find_element_by_tag_name('body').text
-        print("=============================================================")
         print("title: ", wd.title)
-        print(body)
 
         # ステータスを完了に変更
         if '抽選の申込みが完了しました。' in body:
@@ -108,7 +97,6 @@ def login_to_tmgbc(lotReqTime, sport, location_page, location_id, date, time):
 
     except Exception as e:
 
-        print("=============================================================")
         print(e)
 
         # ステータスをエラーに変更
@@ -125,16 +113,12 @@ def get_result(member):
     # TMGBCトップ
     wd.get("https://yoyaku.sports.metro.tokyo.lg.jp/user/view/user/homeIndex.html")
     sleep(0.5)
-    #print("=============================================================")
     print("title: ", wd.title)
-    #print(wd.find_element_by_tag_name('body').text)
     wd.find_element_by_id('login').click()
 
     # ログイン
     sleep(0.5)
-    #print("=============================================================")
     print("title: ", wd.title)
-    #print(wd.find_element_by_tag_name('body').text)
     if wd.title == 'ログイン／TMGBC':
         sleep(4)
         wd.find_element_by_id('userid').send_keys(member.tmgbc_id)
@@ -143,9 +127,7 @@ def get_result(member):
 
     # マイページメイン
     sleep(0.5)
-    #print("=============================================================")
     print("title: ", wd.title)
-    #print(wd.find_element_by_tag_name('body').text)
     lotStatusListItems = wd.find_elements_by_css_selector('#lotStatusListItems > tr')
     results = []
 
@@ -172,36 +154,6 @@ def get_result(member):
     return results
 
 
-def get_result_test(member):
-    #raise ValueError("error!")
-    if member.name == '岩田康明':
-        return [{'ymd': '2022年4月16日 土曜日',
-                 'stime': '15時',
-                 'etime': '17時',
-                 'sport': 'テニス（人工芝）', 
-                 'location': '舎人公園', 
-                 'status': '【当選】確定する'},
-                {'ymd': '2022年4月16日 土曜日',
-                 'stime': '15時',
-                 'etime': '17時',
-                 'sport': 'テニス（人工芝）', 
-                 'location': '舎人公園', 
-                 'status': '落選'}]
-    elif member.name == '岩田弓華':
-        return [{'ymd': '2022年4月2日 土曜日',
-                 'stime': '15時',
-                 'etime': '17時',
-                 'sport': 'テニス（人工芝）', 
-                 'location': '舎人公園', 
-                 'status': '【当選】確定する'},
-                {'ymd': '2022年4月16日 土曜日',
-                 'stime': '15時',
-                 'etime': '17時',
-                 'sport': 'テニス（人工芝）', 
-                 'location': '舎人公園', 
-                 'status': '落選'}]
-    return
-
 def get_results():
 
     today = date.today()
@@ -225,22 +177,20 @@ def get_results():
         # 抽選結果一覧をTMGBCから取得
         try:
             results = get_result(member)
-            #results = get_result_test(member)
         except Exception as e:
             print(e)
 
         # 抽選結果を保存
         if len(results) > 0: 
+
             for result in results:
 
-                status = ''
+                status = '？'
 
                 if '落選' in result['status']:
                     status = '×'
                 elif '当選' in result['status']:
                     status = '○'
-                else:
-                    status = '？'
 
                 lotResult = LotResult.objects.create(
                     owner=member.owner,

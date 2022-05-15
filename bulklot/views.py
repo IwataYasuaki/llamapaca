@@ -67,13 +67,14 @@ class LotReqCreate(LoginRequiredMixin, generic.CreateView):
             sport = self.request.POST.get('sport')
             location = self.request.POST.get('location').split(',')
             location_page = location[0]
-            location_id = location[1]
+            location_id = location[1] 
+
+            # 1つずつ抽選申込を実行
             for lotReqTime in lotReqTimes:
-                print(lotReqTime.member, lotReqTime.member.tmgbc_id, lotReqTime.member.tmgbc_password)
-                date = self.request.POST.get('lotrequesttime_set-0-date').replace('-0', '-').replace('-', ',')
-                time = self.request.POST.get('lotrequesttime_set-0-time') 
+                print(lotReqTime)
                 # 非同期で抽選申込を実行
-                login_to_tmgbc.delay(lotReqTime, sport, location_page, location_id, date, time)
+                login_to_tmgbc.delay(sport, location_page, location_id, lotReqTime)
+
         else:
             return self.form_invalid(form)
     
