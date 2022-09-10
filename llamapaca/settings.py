@@ -153,7 +153,7 @@ BOOTSTRAP4 = {
 }
 
 # Settings for django-rq
-redis_url = urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost:6379'))
+redis_url = urlparse(os.environ.get('REDIS_TLS_URL', 'redis://localhost:6379'))
 
 RQ_QUEUES = {
     'default': {
