@@ -14,11 +14,11 @@
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218261675-bd6bc4af-4937-41b9-8db5-7a48b279cbfe.png" width="100px"></kbd>
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218261395-1236d580-f0b9-45f7-be93-ca213840c8dd.png" width="100px"></kbd>
 
-### メンバー登録
+### メンバー
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218260803-9854f7b5-532f-4da5-8ad7-91e89b0f4b42.png" width="100px"></kbd>
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218260810-3521e697-bcf5-4a62-b973-59fdbd4bcb76.png" width="100px"></kbd>
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218260802-a23a52e6-0e26-4b22-9265-7c5c2d190915.png" width="100px"></kbd>
 
-### 抽選結果確認
+### 抽選結果
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218260799-d2128ad0-554a-4fd6-9730-0fbc9a947648.png" width="100px"></kbd>
 
