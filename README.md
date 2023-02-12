@@ -22,3 +22,13 @@
 ### 抽選結果
 <kbd><img src="https://user-images.githubusercontent.com/11259807/218260799-d2128ad0-554a-4fd6-9730-0fbc9a947648.png" width="100px"></kbd>
 
+## 構成
+![システム構成](https://user-images.githubusercontent.com/11259807/218312767-863d4523-6861-4cc7-b6cb-e424cb4141bc.png)
+* (A) ブラウザから送信された一括抽選申込のリクエストを [Django](https://www.djangoproject.com/) アプリが受け取る。
+* (B) 申込数分のジョブをキュー（ [RQ](https://python-rq.org/) ）に追加する。
+* (C) キューからジョブが取り出される。
+* (D) ブラウザ自動操作（ [Selenium](https://www.selenium.dev/ja/) ）により東京都スポーツ施設サービスで抽選申込をする。（キューが空になるまで繰り返す）
+
+## 工夫
+* 東京都スポーツ施設サービスは特に抽選申込のためのAPI等は提供していないため、Seleniumによりブラウザを自動操作して抽選申込するようにした。
+* ブラウザ自動操作では1つのジョブの実行に数十秒かかるため、RQを用いた非同期処理により画面レスポンスはすぐに返ってくるようにした。
